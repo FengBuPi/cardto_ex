@@ -35,4 +35,18 @@ export default defineConfig({
       tsconfigPaths(),
     ],
   }),
+  // 开发时的浏览器配置
+  runner: {
+    // 开发时自动打开的网站
+    startUrls: [
+      "https://juejin.cn/",
+    ],
+    chromiumArgs: [
+      "--auto-open-devtools-for-tabs",
+    ],
+    // 自动打开开发者工具
+    openDevtools: true,
+    // 自动打开浏览器后台控制台
+    openConsole: true
+  }
 })

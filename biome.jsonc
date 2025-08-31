@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -28,14 +28,8 @@
           "level": "warn",
           "fix": "safe",
           "options": {
-            "attributes": [
-              "classList"
-            ],
-            "functions": [
-              "clsx",
-              "cva",
-              "tw"
-            ]
+            "attributes": ["classList"],
+            "functions": ["clsx", "cva", "tw"]
           }
         }
       },
@@ -87,10 +81,13 @@
     },
     "includes": [
       "**",
-      "!**/node_modules",
-      "!**/dist",
-      "!**/.wxt",
-      "!**/.output"
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/.wxt/**",
+      "!**/.output/**",
+      "!**/build/**",
+      "!**/coverage/**",
+      "!**/.git/**"
     ]
   },
   "formatter": {
@@ -100,10 +97,13 @@
     "lineWidth": 80,
     "includes": [
       "**",
-      "!**/node_modules",
-      "!**/dist",
-      "!**/.wxt",
-      "!**/.output"
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/.wxt/**",
+      "!**/.output/**",
+      "!**/build/**",
+      "!**/coverage/**",
+      "!**/.git/**"
     ]
   },
   "javascript": {
