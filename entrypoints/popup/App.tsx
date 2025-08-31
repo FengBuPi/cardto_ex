@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { browser } from "wxt/browser"
-import { getOptions, type OptionsState, saveOptions } from "@/entrypoints/popup/utils/storage"
+import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
 import packageJson from "../../package.json"
 import { ToggleOption } from "./components/ToggleOption"
 
@@ -127,7 +127,7 @@ export const App = () => {
       </main>
 
       <footer className="mt-4 text-center text-muted-foreground text-xs">
-        <p>cpdown v{packageJson.version} — 将任何网页复制为干净的 Markdown</p>
+        <p>CardTo v{packageJson.version} — 将任何网页复制为干净的 Markdown</p>
       </footer>
     </div>
   )

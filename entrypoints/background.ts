@@ -1,7 +1,7 @@
 import { browser } from "wxt/browser"
 import { showNotification } from "@/lib/showNotification"
 
-// Helper function to check if a URL can be injected with scripts
+// 辅助函数：检查URL是否可以注入脚本
 function isInjectableUrl(url?: string): boolean {
   if (!url) return false
 
@@ -25,12 +25,12 @@ function isInjectableUrl(url?: string): boolean {
     "about:blank",
   ]
 
-  // Check if URL starts with any restricted protocol
+  // 检查URL是否以任何受限协议开头
   if (restrictedProtocols.some((protocol) => url.startsWith(protocol))) {
     return false
   }
 
-  // Check if URL is in restricted URLs list
+  // 检查URL是否在受限URL列表中
   if (restrictedUrls.some((restrictedUrl) => url.startsWith(restrictedUrl))) {
     return false
   }
@@ -48,61 +48,61 @@ export default defineBackground(() => {
     if (command === "copy-as-markdown") {
       copyCurrentPageAsMarkdown()
     } else {
-      console.log("Unknown command:", command)
+      console.log("未知命令:", command)
     }
   })
 
-  // Listen for messages from content scripts to open Raycast confetti without triggering page-level prompts
+  // 监听来自内容脚本的消息，以打开Raycast庆祝效果，而不触发页面级提示
   browser.runtime.onMessage.addListener((msg) => {
     if (msg.type === "OPEN_CONFETTI") {
-      // Capture the currently active tab so focus can stay there
+      // 捕获当前活动标签页，以便焦点可以保持在那里
       browser.tabs
         .query({ active: true, currentWindow: true })
         .then(([_currentTab]) => {
-          // Open the confetti redirect tab in the background
+          // 在后台打开庆祝效果重定向标签页
           browser.tabs
             .create({ url: "https://raycast.com/confetti", active: false })
             .then((confettiTab) => {
               if (!confettiTab.id) return
 
-              // Close the confetti tab automatically after a short delay
+              // 短暂延迟后自动关闭庆祝效果标签页
               setTimeout(() => {
                 browser.tabs.remove(confettiTab.id!).catch(() => {
-                  /* tab already closed */
+                  /* 标签页已关闭 */
                 })
-              }, 2000) // 2 초면 redirect 및 Raycast 실행 충분
+              }, 2000) // 2秒足够重定向和执行Raycast
             })
             .catch((err) => {
-              console.error("Failed to open confetti tab:", err)
+              console.error("打开庆祝效果标签页失败:", err)
             })
         })
     } else if (msg.type === "COPY_TEXT") {
-      // 处理来自 popup 的复制请求
+      // 处理来自popup的复制请求
       copyCurrentPageAsMarkdown()
     }
   })
 
   async function copyCurrentPageAsMarkdown() {
     try {
-      // Get the current active tab
+      // 获取当前活动标签页
       const [activeTab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       })
 
       if (!activeTab.id) {
-        console.error("Active tab has no ID")
-        showNotification("Error: Could not identify the current tab", "error")
+        console.error("活动标签页没有ID")
+        showNotification("错误：无法识别当前标签页", "error")
         return
       }
 
       const url = activeTab.url
 
-      // Check if the URL is injectable
+      // 检查URL是否可以注入
       if (!isInjectableUrl(url)) {
-        console.log("Cannot inject script into restricted URL:", url)
+        console.log("无法向受限URL注入脚本:", url)
         showNotification(
-          "Cannot copy content from this page. This is a restricted page (browser internal page, extension page, etc.)",
+          "无法从此页面复制内容。这是一个受限页面（浏览器内部页面、扩展页面等）",
           "warning",
         )
         return
@@ -116,7 +116,7 @@ export default defineBackground(() => {
         const videoId = searchParams.get("v")
 
         if (!videoId) {
-          throw new Error("No video ID found")
+          throw new Error("未找到视频ID")
         }
 
         browser.tabs.sendMessage(activeTab.id!, {
@@ -127,7 +127,7 @@ export default defineBackground(() => {
         return
       }
 
-      // Execute a script in the tab to get the body content
+      // 在标签页中执行脚本以获取body内容
       const results = await browser.scripting.executeScript({
         target: { tabId: activeTab.id },
         func: () => {
@@ -135,10 +135,10 @@ export default defineBackground(() => {
         },
       })
 
-      // The result is an array of execution results
+      // 结果是一个执行结果数组
       if (results && results.length > 0 && results[0].result) {
         const bodyContent = results[0].result
-        console.log("Body content:", bodyContent)
+        console.log("页面内容:", bodyContent)
 
         browser.tabs.query({ active: true, currentWindow: true }, () => {
           browser.tabs.sendMessage(activeTab.id!, {
@@ -148,29 +148,29 @@ export default defineBackground(() => {
         })
       }
     } catch (error) {
-      console.error("Error getting page content:", error)
+      console.error("获取页面内容时出错:", error)
 
-      // Handle specific error types
+      // 处理特定错误类型
       if (error instanceof Error) {
         if (error.message.includes("Cannot access contents of the page")) {
           showNotification(
-            "Cannot access this page. The page may be restricted, still loading, or you may need to refresh and try again.",
+            "无法访问此页面。页面可能受限、仍在加载中，或者您可能需要刷新页面后重试。",
             "error",
           )
         } else if (error.message.includes("Extension context invalidated")) {
           showNotification(
-            "Extension was reloaded. Please refresh the page and try again.",
+            "扩展已重新加载。请刷新页面后重试。",
             "warning",
           )
         } else {
           showNotification(
-            `Failed to copy page content: ${error.message}`,
+            `复制页面内容失败: ${error.message}`,
             "error",
           )
         }
       } else {
         showNotification(
-          "An unexpected error occurred while copying page content",
+          "复制页面内容时发生意外错误",
           "error",
         )
       }

@@ -63,7 +63,7 @@ export default defineContentScript({
   matches: ["*://*/*"],
   async main() {
     createRoot(getRoot()).render(<Noti />)
-
+    console.log("Content script loaded")
     browser.runtime.onMessage.addListener(
       async (msg, _sender, sendResponse) => {
         if (msg.type === "COPY_TEXT") {
