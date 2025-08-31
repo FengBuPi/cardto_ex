@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { browser } from "wxt/browser"
-import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
+import { getOptions, type OptionsState, saveOptions } from "@/entrypoints/popup/utils/storage"
 import packageJson from "../../package.json"
 import { ToggleOption } from "./components/ToggleOption"
 
 export const App = () => {
   const [options, setOptions] = useState<OptionsState | null>(null)
 
-  useEffect(() => {
-    const loadOptions = async () => {
-      const savedOptions = await getOptions()
-      setOptions(savedOptions)
-    }
-
-    loadOptions()
+  const loadOptions = useCallback(async () => {
+    const savedOptions = await getOptions()
+    setOptions(savedOptions)
   }, [])
+
+  useEffect(() => {
+    loadOptions()
+  }, [loadOptions])
 
   const handleOptionChange = async (
     key: keyof OptionsState,
