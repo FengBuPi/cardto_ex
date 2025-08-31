@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { ToggleOption } from "./components/ToggleOption"
+import { browser } from "wxt/browser"
 import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
 import packageJson from "../../package.json"
+import { ToggleOption } from "./components/ToggleOption"
 
 export const App = () => {
   const [options, setOptions] = useState<OptionsState | null>(null)
@@ -33,6 +34,16 @@ export const App = () => {
     await saveOptions(newOptions)
   }
 
+  const handleCopyCurrentPage = async () => {
+    try {
+      // 发送消息给 background script 来复制当前页面
+      const response = await browser.runtime.sendMessage({ type: "COPY_TEXT" })
+      console.log("Copy response:", response)
+    } catch (error) {
+      console.error("Failed to copy page:", error)
+    }
+  }
+
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-4 text-foreground">
       <header className="mb-4">
@@ -40,6 +51,19 @@ export const App = () => {
       </header>
 
       <main className="space-y-1 rounded-lg border border-border bg-card p-6">
+        {/* 复制当前页面按钮 */}
+        <div className="mb-6">
+          <button
+            type="button"
+            onClick={handleCopyCurrentPage}
+            className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            复制当前页面为 Markdown
+          </button>
+        </div>
+
+        <div className="mb-6 border-border border-t"></div>
+
         {options && (
           <>
             <ToggleOption
@@ -103,10 +127,8 @@ export const App = () => {
       </main>
 
       <footer className="mt-4 text-center text-muted-foreground text-xs">
-        <p>
-          cpdown v{packageJson.version} — 将任何网页复制为干净的 Markdown
-        </p>
+        <p>cpdown v{packageJson.version} — 将任何网页复制为干净的 Markdown</p>
       </footer>
-    </div >
+    </div>
   )
 }

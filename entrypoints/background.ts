@@ -47,6 +47,8 @@ export default defineBackground(() => {
   browser.commands.onCommand.addListener((command) => {
     if (command === "copy-as-markdown") {
       copyCurrentPageAsMarkdown()
+    } else {
+      console.log("Unknown command:", command)
     }
   })
 
@@ -56,7 +58,7 @@ export default defineBackground(() => {
       // Capture the currently active tab so focus can stay there
       browser.tabs
         .query({ active: true, currentWindow: true })
-        .then(([currentTab]) => {
+        .then(([_currentTab]) => {
           // Open the confetti redirect tab in the background
           browser.tabs
             .create({ url: "https://raycast.com/confetti", active: false })
@@ -74,6 +76,9 @@ export default defineBackground(() => {
               console.error("Failed to open confetti tab:", err)
             })
         })
+    } else if (msg.type === "COPY_TEXT") {
+      // 处理来自 popup 的复制请求
+      copyCurrentPageAsMarkdown()
     }
   })
 
