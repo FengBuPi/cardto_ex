@@ -15,12 +15,18 @@ export default defineConfig({
       "copy-as-markdown": {
         suggested_key: {
           default: "Ctrl+Shift+T",
-          mac: "Ctrl+T",
+          mac: "Command+W",
         },
-        description: "复制当前页面内容",
+        description: "复制当前页面内容为 Markdown",
       },
     },
-    permissions: ["activeTab", "clipboardWrite", "scripting", "storage"],
+    permissions: [
+      "activeTab",
+      "clipboardWrite",
+      "scripting",
+      "storage",
+      "commands",
+    ],
     host_permissions: ["<all_urls>"],
     web_accessible_resources: [
       {
@@ -30,23 +36,16 @@ export default defineConfig({
     ],
   },
   vite: () => ({
-    plugins: [
-      tailwindcss(),
-      tsconfigPaths(),
-    ],
+    plugins: [tailwindcss(), tsconfigPaths()],
   }),
   // 开发时的浏览器配置
   runner: {
     // 开发时自动打开的网站
-    startUrls: [
-      "https://juejin.cn/",
-    ],
-    chromiumArgs: [
-      "--auto-open-devtools-for-tabs",
-    ],
+    startUrls: ["https://juejin.cn/"],
+    chromiumArgs: ["--auto-open-devtools-for-tabs"],
     // 自动打开开发者工具
     openDevtools: true,
     // 自动打开浏览器后台控制台
-    openConsole: true
-  }
+    openConsole: true,
+  },
 })

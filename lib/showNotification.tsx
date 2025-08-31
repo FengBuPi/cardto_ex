@@ -14,7 +14,6 @@ export function showNotification(
     case "info":
       toast.info(message)
       break
-    case "success":
     default:
       toast.success(message)
       break
