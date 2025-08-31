@@ -1,0 +1,206 @@
+{
+  // ========================================
+  // 编辑器基础配置
+  // ========================================
+  "editor.formatOnSave": true, // 保存时自动格式化代码
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit", // 保存时自动整理导入语句
+    "source.fixAll.biome": "explicit" // 保存时自动修复 Biome 检测到的问题
+  },
+  "editor.defaultFormatter": "biomejs.biome", // 设置 Biome 为默认格式化工具
+  "editor.tabSize": 2, // 设置制表符宽度为 2 个空格
+  "editor.insertSpaces": true, // 使用空格而不是制表符
+  "editor.detectIndentation": false, // 禁用自动检测缩进
+  "editor.rulers": [], // 不显示任何标尺线
+  "editor.wordWrap": "bounded", // 在标尺线处换行
+  "editor.bracketPairColorization.enabled": true, // 启用括号对着色
+  "editor.guides.bracketPairs": "active", // 显示活跃的括号对引导线
+  "editor.suggest.insertMode": "replace", // 代码建议使用替换模式
+  "editor.acceptSuggestionOnCommitCharacter": false, // 禁用按提交字符接受建议
+  "editor.acceptSuggestionOnEnter": "on", // 按 Enter 键接受建议
+  "editor.quickSuggestions": {
+    "other": true, // 在代码中启用快速建议
+    "comments": false, // 在注释中禁用快速建议
+    "strings": true // 在字符串中启用快速建议
+  },
+
+  // ========================================
+  // 文件类型特定配置
+  // ========================================
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome", // TypeScript 文件使用 Biome 格式化
+    "editor.suggest.insertMode": "replace" // TypeScript 文件使用替换模式
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome", // TSX 文件使用 Biome 格式化
+    "editor.suggest.insertMode": "replace" // TSX 文件使用替换模式
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome", // JavaScript 文件使用 Biome 格式化
+    "editor.suggest.insertMode": "replace" // JavaScript 文件使用替换模式
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome", // JSX 文件使用 Biome 格式化
+    "editor.suggest.insertMode": "replace" // JSX 文件使用替换模式
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome" // JSON 文件使用 Biome 格式化
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome" // JSONC 文件使用 Biome 格式化
+  },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome" // CSS 文件使用 Biome 格式化
+  },
+  "[html]": {
+    "editor.defaultFormatter": "biomejs.biome" // HTML 文件使用 Biome 格式化
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "biomejs.biome", // Markdown 文件使用 Biome 格式化
+    "editor.wordWrap": "on" // Markdown 文件启用自动换行
+  },
+
+  // ========================================
+  // TypeScript 配置
+  // ========================================
+  "typescript.preferences.importModuleSpecifier": "relative", // 优先使用相对路径导入
+  "typescript.suggest.autoImports": true, // 启用自动导入建议
+  "typescript.updateImportsOnFileMove.enabled": "always", // 文件移动时自动更新导入路径
+  "typescript.preferences.includePackageJsonAutoImports": "auto", // 自动包含 package.json 中的导入
+  "typescript.suggest.paths": true, // 启用路径映射建议
+
+  // ========================================
+  // React 开发配置
+  // ========================================
+  "emmet.includeLanguages": {
+    "typescript": "html", // 在 TypeScript 文件中启用 HTML Emmet
+    "typescriptreact": "html" // 在 TSX 文件中启用 HTML Emmet
+  },
+  "emmet.triggerExpansionOnTab": true, // 按 Tab 键触发 Emmet 展开
+
+  // ========================================
+  // Tailwind CSS 配置
+  // ========================================
+  "tailwindCSS.includeLanguages": {
+    "typescript": "html", // 在 TypeScript 文件中启用 Tailwind 支持
+    "typescriptreact": "html", // 在 TSX 文件中启用 Tailwind 支持
+    "javascript": "html", // 在 JavaScript 文件中启用 Tailwind 支持
+    "javascriptreact": "html" // 在 JSX 文件中启用 Tailwind 支持
+  },
+  "tailwindCSS.experimental.classRegex": [
+    // 配置 clsx 函数的类名识别正则表达式
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    // 配置 cva 函数的类名识别正则表达式
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    // 配置 tw 函数的类名识别正则表达式
+    ["tw\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "tailwindCSS.validate": true, // 启用 Tailwind CSS 验证
+  "tailwindCSS.lint.cssConflict": "warning", // CSS 冲突时显示警告
+  "tailwindCSS.lint.invalidApply": "error", // 无效的 @apply 指令显示错误
+  "tailwindCSS.lint.invalidConfigPath": "error", // 无效的配置文件路径显示错误
+  "tailwindCSS.lint.invalidScreen": "error", // 无效的屏幕断点显示错误
+  "tailwindCSS.lint.invalidTailwindDirective": "error", // 无效的 Tailwind 指令显示错误
+  "tailwindCSS.lint.invalidVariant": "error", // 无效的变体显示错误
+  "tailwindCSS.lint.recommendedVariantOrder": "warning", // 建议的变体顺序显示警告
+
+  // ========================================
+  // 文件排除配置
+  // ========================================
+  "files.exclude": {
+    "**/node_modules": true, // 隐藏 node_modules 目录
+    "**/.wxt": true, // 隐藏 WXT 构建目录
+    "**/.output": true, // 隐藏输出目录
+    "**/dist": true, // 隐藏 dist 目录
+    "**/build": true, // 隐藏 build 目录
+    "**/coverage": true, // 隐藏测试覆盖率目录
+    "**/.git": true, // 隐藏 Git 目录
+    "**/routeTree.gen.ts": true // 隐藏自动生成的路由树文件
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true, // 文件监视器排除 node_modules
+    "**/.wxt/**": true, // 文件监视器排除 WXT 目录
+    "**/.output/**": true, // 文件监视器排除输出目录
+    "**/dist/**": true, // 文件监视器排除 dist 目录
+    "**/build/**": true, // 文件监视器排除 build 目录
+    "**/coverage/**": true, // 文件监视器排除测试覆盖率目录
+    "**/.git/**": true, // 文件监视器排除 Git 目录
+    "**/routeTree.gen.ts": true // 文件监视器排除自动生成的路由树文件
+  },
+  "search.exclude": {
+    "**/node_modules": true, // 搜索时排除 node_modules
+    "**/.wxt": true, // 搜索时排除 WXT 目录
+    "**/.output": true, // 搜索时排除输出目录
+    "**/dist": true, // 搜索时排除 dist 目录
+    "**/build": true, // 搜索时排除 build 目录
+    "**/coverage": true, // 搜索时排除测试覆盖率目录
+    "**/.git": true, // 搜索时排除 Git 目录
+    "**/routeTree.gen.ts": true // 搜索时排除自动生成的路由树文件
+  },
+
+  // ========================================
+  // 工作区配置
+  // ========================================
+  "workbench.editor.enablePreview": false, // 禁用编辑器预览模式
+  "workbench.editor.enablePreviewFromQuickOpen": false, // 禁用快速打开时的预览模式
+  "workbench.editor.showTabs": "multiple", // 显示多个标签页
+  "workbench.editor.tabSizing": "shrink", // 标签页大小自适应
+  "workbench.editor.wrapTabs": "off", // 禁用标签页换行
+
+  // ========================================
+  // 扩展配置
+  // ========================================
+  "extensions.ignoreRecommendations": false, // 不忽略扩展推荐
+  "extensions.autoUpdate": true, // 自动更新扩展
+
+  // ========================================
+  // 终端配置
+  // ========================================
+  "terminal.integrated.defaultProfile.osx": "zsh", // macOS 默认使用 zsh
+  "terminal.integrated.defaultProfile.linux": "bash", // Linux 默认使用 bash
+  "terminal.integrated.defaultProfile.windows": "PowerShell UTF-8", // Windows 默认使用 PowerShell UTF-8
+  "terminal.integrated.profiles.windows": {
+    "PowerShell UTF-8": {
+      "source": "PowerShell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "chcp 65001 > $null; $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding"
+      ]
+    },
+    "PowerShell": {
+      "source": "PowerShell"
+    },
+    "Command Prompt UTF-8": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "args": ["/k", "chcp 65001"] // 设置命令提示符为 UTF-8 编码
+    }
+  },
+
+  // ========================================
+  // Git 配置
+  // ========================================
+  "git.enableSmartCommit": true, // 启用智能提交
+  "git.autofetch": true, // 自动获取远程更新
+  "git.confirmSync": false, // 禁用同步确认
+  "git.autofetchPeriod": 180, // 每 3 分钟自动获取一次
+
+  // ========================================
+  // 调试配置
+  // ========================================
+  "debug.console.fontSize": 14, // 调试控制台字体大小
+  "debug.console.lineHeight": 20, // 调试控制台行高
+
+  // ========================================
+  // 其他配置
+  // ========================================
+  "files.associations": {
+    "*.wxt": "typescript" // 将 .wxt 文件关联为 TypeScript
+  },
+  "files.trimTrailingWhitespace": true, // 自动删除行尾空格
+  "files.insertFinalNewline": true, // 文件末尾自动插入换行符
+  "files.trimFinalNewlines": true // 自动删除文件末尾的多余换行符
+}
