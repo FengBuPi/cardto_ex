@@ -36,15 +36,15 @@ export const App = () => {
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-4 text-foreground">
       <header className="mb-4">
-        <h1 className="font-bold text-xl">Settings</h1>
+        <h1 className="font-bold text-xl">设置</h1>
       </header>
 
       <main className="space-y-1 rounded-lg border border-border bg-card p-6">
         {options && (
           <>
             <ToggleOption
-              title="Use Deffudle"
-              description="Process content using Deffudle for an alternative parsing method."
+              title="使用 Deffudle"
+              description="使用 Deffudle 进行内容解析，提供替代的解析方法。"
               checked={options.useDeffudle}
               onCheckedChange={(checked) =>
                 handleOptionChange("useDeffudle", checked)
@@ -55,8 +55,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="Use Mozilla Readability"
-              description="Parse webpage content using Readability for cleaner markdown output"
+              title="使用 Mozilla Readability"
+              description="使用 Readability 解析网页内容，生成更清晰的 Markdown 输出"
               checked={options.useReadability}
               onCheckedChange={(checked) =>
                 handleOptionChange("useReadability", checked)
@@ -68,8 +68,8 @@ export const App = () => {
 
             {/* wrap in triple backticks */}
             <ToggleOption
-              title="Wrap in triple backticks"
-              description="Wrap the copied markdown in triple backticks"
+              title="用三个反引号包装"
+              description="用三个反引号包装复制的 Markdown 内容"
               checked={options.wrapInTripleBackticks}
               onCheckedChange={(checked) =>
                 handleOptionChange("wrapInTripleBackticks", checked)
@@ -79,8 +79,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="Show Success Toast"
-              description="Display a notification when content is successfully copied"
+              title="显示成功提示"
+              description="内容成功复制后显示通知提示"
               checked={options.showSuccessToast}
               onCheckedChange={(checked) =>
                 handleOptionChange("showSuccessToast", checked)
@@ -90,8 +90,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="Show Raycast Confetti"
-              description="Celebrate successful copying with a confetti animation. Tip: the first time Chrome may ask 'Open Raycast.app?'. Visit https://raycast.com/confetti once and check 'Always allow www.raycast.com to open links of this type' to stop seeing that prompt."
+              title="显示 Raycast 庆祝动画"
+              description="复制成功后播放庆祝动画。提示：首次使用时 Chrome 可能会询问'打开 Raycast.app？'。访问 https://raycast.com/confetti 一次并勾选'始终允许 www.raycast.com 打开此类链接'以停止看到该提示。"
               checked={options.showConfetti}
               onCheckedChange={(checked) =>
                 handleOptionChange("showConfetti", checked)
@@ -104,7 +104,7 @@ export const App = () => {
 
       <footer className="mt-4 text-center text-muted-foreground text-xs">
         <p>
-          cpdown v{packageJson.version} — Copy any webpage as clean markdown
+          cpdown v{packageJson.version} — 将任何网页复制为干净的 Markdown
         </p>
       </footer>
     </div >
