@@ -1,4 +1,5 @@
 import { browser } from "wxt/browser"
+import type { Language } from "./i18n"
 
 export type OptionsState = {
   useDeffudle: boolean
@@ -6,6 +7,7 @@ export type OptionsState = {
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
+  language: Language
 }
 
 export const defaultOptions: OptionsState = {
@@ -14,6 +16,7 @@ export const defaultOptions: OptionsState = {
   wrapInTripleBackticks: true,
   showSuccessToast: true,
   showConfetti: false,
+  language: "zh",
 }
 
 export async function getOptions(): Promise<OptionsState> {

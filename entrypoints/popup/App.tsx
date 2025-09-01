@@ -1,11 +1,19 @@
-import { useCallback, useEffect, useState } from "react"
-import { browser } from "wxt/browser"
+import { createTranslator, type Language } from "@/lib/i18n"
 import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
+import { useCallback, useEffect, useId, useMemo, useState } from "react"
+import { browser } from "wxt/browser"
 import packageJson from "../../package.json"
 import { ToggleOption } from "./components/ToggleOption"
 
 export const App = () => {
   const [options, setOptions] = useState<OptionsState | null>(null)
+
+  const t = useMemo(
+    () => createTranslator(options?.language ?? "zh"),
+    [options?.language],
+  )
+
+  const languageSelectId = useId()
 
   const loadOptions = useCallback(async () => {
     const savedOptions = await getOptions()
@@ -34,6 +42,13 @@ export const App = () => {
     await saveOptions(newOptions)
   }
 
+  const handleLanguageChange = async (lang: Language) => {
+    if (!options) return
+    const newOptions = { ...options, language: lang }
+    setOptions(newOptions)
+    await saveOptions({ language: lang })
+  }
+
   const handleCopyCurrentPage = async () => {
     try {
       // 发送消息给 background script 来复制当前页面
@@ -47,18 +62,34 @@ export const App = () => {
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-4 text-foreground">
       <header className="mb-4">
-        <h1 className="font-bold text-xl">设置</h1>
+        <h1 className="font-bold text-xl">{t("common.settings")}</h1>
       </header>
 
       <main className="space-y-1 rounded-lg border border-border bg-card p-6">
-        {/* 复制当前页面按钮 */}
+        {/* Language selector */}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <label htmlFor={languageSelectId} className="font-medium text-sm">
+            {t("common.language")}
+          </label>
+          <select
+            id={languageSelectId}
+            className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+            value={options?.language ?? "zh"}
+            onChange={(e) => handleLanguageChange(e.target.value as Language)}
+          >
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        {/* Copy current page button */}
         <div className="mb-6">
           <button
             type="button"
             onClick={handleCopyCurrentPage}
             className="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700"
           >
-            复制当前页面为 Markdown
+            {t("common.copyButton")}
           </button>
         </div>
 
@@ -67,8 +98,8 @@ export const App = () => {
         {options && (
           <>
             <ToggleOption
-              title="使用 Deffudle"
-              description="使用 Deffudle 进行内容解析，提供替代的解析方法。"
+              title={t("options.deffudle.title")}
+              description={t("options.deffudle.description")}
               checked={options.useDeffudle}
               onCheckedChange={(checked) =>
                 handleOptionChange("useDeffudle", checked)
@@ -79,8 +110,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="使用 Mozilla Readability"
-              description="使用 Readability 解析网页内容，生成更清晰的 Markdown 输出"
+              title={t("options.readability.title")}
+              description={t("options.readability.description")}
               checked={options.useReadability}
               onCheckedChange={(checked) =>
                 handleOptionChange("useReadability", checked)
@@ -92,8 +123,8 @@ export const App = () => {
 
             {/* wrap in triple backticks */}
             <ToggleOption
-              title="用三个反引号包装"
-              description="用三个反引号包装复制的 Markdown 内容"
+              title={t("options.wrapInTripleBackticks.title")}
+              description={t("options.wrapInTripleBackticks.description")}
               checked={options.wrapInTripleBackticks}
               onCheckedChange={(checked) =>
                 handleOptionChange("wrapInTripleBackticks", checked)
@@ -103,8 +134,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="显示成功提示"
-              description="内容成功复制后显示通知提示"
+              title={t("options.showSuccessToast.title")}
+              description={t("options.showSuccessToast.description")}
               checked={options.showSuccessToast}
               onCheckedChange={(checked) =>
                 handleOptionChange("showSuccessToast", checked)
@@ -114,8 +145,8 @@ export const App = () => {
             <div className="border-border border-t"></div>
 
             <ToggleOption
-              title="显示 Raycast 庆祝动画"
-              description="复制成功后播放庆祝动画。提示：首次使用时 Chrome 可能会询问'打开 Raycast.app？'。访问 https://raycast.com/confetti 一次并勾选'始终允许 www.raycast.com 打开此类链接'以停止看到该提示。"
+              title={t("options.showConfetti.title")}
+              description={t("options.showConfetti.description")}
               checked={options.showConfetti}
               onCheckedChange={(checked) =>
                 handleOptionChange("showConfetti", checked)
@@ -127,7 +158,9 @@ export const App = () => {
       </main>
 
       <footer className="mt-4 text-center text-muted-foreground text-xs">
-        <p>CardTo v{packageJson.version} — 将任何网页复制为干净的 Markdown</p>
+        <p>
+          CardTo v{packageJson.version} — {t("common.footer")}
+        </p>
       </footer>
     </div>
   )
