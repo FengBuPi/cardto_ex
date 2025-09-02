@@ -107,16 +107,6 @@
   // ========================================
   // 文件排除配置
   // ========================================
-  "files.exclude": {
-    "**/node_modules": true, // 隐藏 node_modules 目录
-    "**/.wxt": true, // 隐藏 WXT 构建目录
-    "**/.output": true, // 隐藏输出目录
-    "**/dist": true, // 隐藏 dist 目录
-    "**/build": true, // 隐藏 build 目录
-    "**/coverage": true, // 隐藏测试覆盖率目录
-    "**/.git": true, // 隐藏 Git 目录
-    "**/routeTree.gen.ts": true // 隐藏自动生成的路由树文件
-  },
   "files.watcherExclude": {
     "**/node_modules/**": true, // 文件监视器排除 node_modules
     "**/.wxt/**": true, // 文件监视器排除 WXT 目录
