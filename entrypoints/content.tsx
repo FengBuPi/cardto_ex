@@ -1,3 +1,6 @@
+import { getRoot, Noti, showNotification } from "@/lib/showNotification"
+import { getOptions } from "@/lib/storage"
+import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { Readability } from "@mozilla/readability"
 import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
@@ -5,9 +8,6 @@ import o200k_base from "js-tiktoken/ranks/o200k_base"
 import { createRoot } from "react-dom/client"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
-import { getRoot, Noti, showNotification } from "@/lib/showNotification"
-import { getOptions } from "@/lib/storage"
-import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 
 const tiktoken = new Tiktoken(o200k_base)
 
@@ -45,6 +45,25 @@ const copyAndNotify = async ({
     document.body.removeChild(textarea)
   }
 
+  // 通过background script上传Markdown数据到API
+  try {
+    console.log("🔄 发送消息给background script进行API上传...")
+    const response = await browser.runtime.sendMessage({
+      type: "UPLOAD_MARKDOWN",
+      payload: markdown,
+    })
+
+    console.log("📨 收到background script响应:", response)
+
+    if (response?.success) {
+      console.log("✅ Markdown数据已成功上传到API")
+    } else {
+      console.log("⚠️ Markdown数据上传到API失败，但已复制到剪贴板")
+    }
+  } catch (error) {
+    console.error("❌ 上传Markdown数据到API时出错:", error)
+  }
+
   sendResponse({ success: true })
 
   const tokens = tiktoken.encode(markdown)
@@ -68,7 +87,7 @@ export default defineContentScript({
       async (msg, _sender, sendResponse) => {
         if (msg.type === "COPY_TEXT") {
           const options = await getOptions()
-
+          console.log("defineContentScript", options)
           const {
             useReadability,
             showSuccessToast,

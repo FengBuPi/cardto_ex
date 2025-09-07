@@ -1,5 +1,42 @@
-import { browser } from "wxt/browser"
 import { showNotification } from "@/lib/showNotification"
+import { browser } from "wxt/browser"
+
+/**
+ * 上传Markdown数据到API
+ * @param markdownData Markdown文本内容
+ * @returns Promise<boolean> 上传是否成功
+ */
+async function uploadMarkdownData(markdownData: string): Promise<boolean> {
+  try {
+    console.log("📤 准备上传数据到API...")
+    const request = {
+      data: markdownData,
+      description: "",
+    }
+
+    console.log("📡 发送请求到 http://localhost:3000/api/data")
+    const response = await fetch("http://localhost:3000/api/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    })
+
+    console.log("📨 API响应状态:", response.status, response.statusText)
+
+    if (!response.ok) {
+      console.error("❌ API上传失败:", response.status, response.statusText)
+      return false
+    }
+
+    console.log("✅ Markdown数据上传成功")
+    return true
+  } catch (error) {
+    console.error("❌ 上传Markdown数据失败:", error)
+    return false
+  }
+}
 
 // 辅助函数：检查URL是否可以注入脚本
 function isInjectableUrl(url?: string): boolean {
@@ -53,7 +90,7 @@ export default defineBackground(() => {
   })
 
   // 监听来自内容脚本的消息，以打开Raycast庆祝效果，而不触发页面级提示
-  browser.runtime.onMessage.addListener((msg) => {
+  browser.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === "OPEN_CONFETTI") {
       // 捕获当前活动标签页，以便焦点可以保持在那里
       browser.tabs
@@ -67,9 +104,11 @@ export default defineBackground(() => {
 
               // 短暂延迟后自动关闭庆祝效果标签页
               setTimeout(() => {
-                browser.tabs.remove(confettiTab.id!).catch(() => {
-                  /* 标签页已关闭 */
-                })
+                if (confettiTab.id) {
+                  browser.tabs.remove(confettiTab.id).catch(() => {
+                    /* 标签页已关闭 */
+                  })
+                }
               }, 2000) // 2秒足够重定向和执行Raycast
             })
             .catch((err) => {
@@ -79,6 +118,21 @@ export default defineBackground(() => {
     } else if (msg.type === "COPY_TEXT") {
       // 处理来自popup的复制请求
       copyCurrentPageAsMarkdown()
+    } else if (msg.type === "UPLOAD_MARKDOWN") {
+      // 处理来自content script的API上传请求
+      console.log("🔄 Background script收到UPLOAD_MARKDOWN消息")
+      console.log("📝 Markdown数据长度:", msg.payload?.length || 0)
+
+      uploadMarkdownData(msg.payload)
+        .then((success) => {
+          console.log("📤 API上传结果:", success)
+          sendResponse({ success })
+        })
+        .catch((error) => {
+          console.error("❌ API上传失败:", error)
+          sendResponse({ success: false, error: error.message })
+        })
+      return true // 保持消息通道开放以支持异步响应
     }
   })
 
@@ -119,10 +173,12 @@ export default defineBackground(() => {
           throw new Error("未找到视频ID")
         }
 
-        browser.tabs.sendMessage(activeTab.id!, {
-          type: "COPY_YOUTUBE_SUBTITLE",
-          payload: videoId,
-        })
+        if (activeTab.id) {
+          browser.tabs.sendMessage(activeTab.id, {
+            type: "COPY_YOUTUBE_SUBTITLE",
+            payload: videoId,
+          })
+        }
 
         return
       }
@@ -141,10 +197,12 @@ export default defineBackground(() => {
         console.log("页面内容:", bodyContent)
 
         browser.tabs.query({ active: true, currentWindow: true }, () => {
-          browser.tabs.sendMessage(activeTab.id!, {
-            type: "COPY_TEXT",
-            payload: bodyContent,
-          })
+          if (activeTab.id) {
+            browser.tabs.sendMessage(activeTab.id, {
+              type: "COPY_TEXT",
+              payload: bodyContent,
+            })
+          }
         })
       }
     } catch (error) {
@@ -158,21 +216,12 @@ export default defineBackground(() => {
             "error",
           )
         } else if (error.message.includes("Extension context invalidated")) {
-          showNotification(
-            "扩展已重新加载。请刷新页面后重试。",
-            "warning",
-          )
+          showNotification("扩展已重新加载。请刷新页面后重试。", "warning")
         } else {
-          showNotification(
-            `复制页面内容失败: ${error.message}`,
-            "error",
-          )
+          showNotification(`复制页面内容失败: ${error.message}`, "error")
         }
       } else {
-        showNotification(
-          "复制页面内容时发生意外错误",
-          "error",
-        )
+        showNotification("复制页面内容时发生意外错误", "error")
       }
     }
   }
